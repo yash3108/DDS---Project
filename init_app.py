@@ -1,5 +1,5 @@
 from network import *
-
+from user_functionality import *
 # Function to initialize the app menu
 def init_menu():
     """
@@ -42,16 +42,16 @@ def navigate(im_u_input):
     Input: user input
     Output: NA
     """
-    match im_u_input:
-        case 1:
+    if im_u_input:
+        if im_u_input == 1:
             admin_menu()
-        case 2:
+        elif im_u_input == 2:
             lv_region_index = region_menu()
             local_user_menu(lv_region_index)
-        case 3:
+        elif im_u_input == 3:
             lv_region_index = region_menu()
             customer_menu(lv_region_index)
-        case 4:
+        else:
             close_system()
 
 # Function to start the app
