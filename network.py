@@ -80,8 +80,8 @@ def create_postgres_container(im_container_name):
 # Function to check if container is running
 def is_container_running(im_container_name):
     if gv_client:
-        lv_containers = gv_client.containers.list()
-
+        lv_containers = gv_client.containers.list(all=True)
+        
         for container in lv_containers:
             if container.name == im_container_name:
                 return container.status == 'running'
@@ -94,7 +94,7 @@ def is_container_running(im_container_name):
 
 # Function to check if container is present
 def is_container_present(im_container_name):
-    lv_containers = gv_client.containers.list()
+    lv_containers = gv_client.containers.list(all=True)
 
     for container in lv_containers:
         if container.name == im_container_name:
