@@ -1,5 +1,6 @@
 from network import *
 
+# Function to initialize the app menu
 def init_menu():
     """
     Input: NA
@@ -14,6 +15,7 @@ def init_menu():
 
     return re_u_input
 
+# Function to get region input
 def region_menu():
     """
     Input: NA
@@ -34,6 +36,7 @@ def local_user_menu(im_region_index):
 def customer_menu(im_region_index):
     pass
 
+# Funtion to navigate based on user input
 def navigate(im_u_input):
     """
     Input: user input
@@ -51,6 +54,11 @@ def navigate(im_u_input):
         case 4:
             close_system()
 
+# Function to start the app
 def init_app():
+    """
+    Input: NA
+    Output: NA
+    """
     lv_u_input = init_menu()
     navigate(lv_u_input)

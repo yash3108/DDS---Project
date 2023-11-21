@@ -187,7 +187,7 @@ def get_database_connection(im_region):
         password=gv_default_database_credentials["password"],
         host=ip_address,
     )
-    conn.autocommt = True
+    conn.autocommit = True
     return conn
 
 # Function to stop running docker container
@@ -214,10 +214,3 @@ def close_system():
         lv_container_name = region + "_container"
         stop_container(lv_container_name)
     print("\nSystem closed")
-    
-
-
-# create_client()
-# check_network_connection()
-# initialize_containers()
-# check_database_connection()
