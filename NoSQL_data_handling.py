@@ -74,6 +74,36 @@ def insert_product():
     # Insert data into the products collection
     product_collection.insert_one(product_data)
 
+def insert_new_components(component_list):
+    components = []
+    while True:
+        component_id = input("Enter component ID (or type 'done' to finish): ")
+        if component_id.lower() == 'done':
+            break
+        if int(component_id) not in component_list:
+            print("This Component doesn't exists in the Inventory: ")
+            break
+        quantity = int(input("Enter quantity for given Component ID ({}): ".format(component_id)))
+        components.append({"component_id": component_id, "quantity": quantity})
 
-# insert_product()
-show_order(1)
+    return components
+
+def insert_supplier_components(region_db):
+    supplier_collection = getCollection(region_db, "supplier_collection")
+    def get_next_supplier_id():
+        max_order = supplier_collection.find_one(sort=[("supplier_id", pymongo.DESCENDING)])
+        if max_order:
+            return max_order["supplier_id"] + 1
+        else:
+            return 1
+        
+    components = []
+    supplier_id = get_next_supplier_id()
+    while True:
+        component_id = input("Enter component ID (or type 'done' to finish): ")
+        if component_id.lower() == 'done':
+            break
+        name = input("Enter the name of component: ")
+        components.append({"component_id": component_id, "name": name})
+    
+    return supplier_id,components
