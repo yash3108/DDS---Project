@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS Orders
   customer_id INTEGER  NOT NULL,
   order_date  DATE,
   status      TEXT    ,
-  region_id   INTEGER NOT NULL, 
+  region      TEXT NOT NULL, 
   PRIMARY KEY (order_id)
 );
 

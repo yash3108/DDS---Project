@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS Customer
   customer_id SERIAL,
   name        TEXT    NOT NULL,
   country     TEXT    NOT NULL,
-  region_id   INTEGER,
+  region      TEXT    NOT NULL,
   PRIMARY KEY (customer_id)
 );
 
@@ -16,21 +16,47 @@ CREATE TABLE IF NOT EXISTS Orders
   customer_id INTEGER  NOT NULL,
   order_date  DATE,
   status      TEXT    ,
-  region_id   INTEGER NOT NULL,
-  PRIMARY KEY (order_id)
-);
+  region      TEXT NOT NULL
+)
+PARTITION BY LIST (region);
 
 
+CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 
--- ALTER TABLE map_product_component
---   ADD CONSTRAINT FK_Products_TO_map_product_component
---     FOREIGN KEY (product_id)
---     REFERENCES Products (product_id);
+CREATE SERVER IF NOT EXISTS boston_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (dbname 'boston_db', host 'localhost');
 
--- ALTER TABLE map_product_component
---   ADD CONSTRAINT FK_Components_TO_map_product_component
---     FOREIGN KEY (component_id)
---     REFERENCES Components (component_id);
+CREATE USER MAPPING IF NOT EXISTS FOR current_user SERVER boston_server OPTIONS (user 'postgres', password 'password');
+
+CREATE SERVER IF NOT EXISTS denver_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (dbname 'denver_db', host 'localhost');
+
+CREATE USER MAPPING IF NOT EXISTS FOR current_user SERVER denver_server OPTIONS (user 'postgres', password 'password');
+
+CREATE SERVER IF NOT EXISTS seattle_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (dbname 'seattle_db', host 'localhost');
+
+CREATE USER MAPPING  IF NOT EXISTS FOR current_user SERVER seattle_server OPTIONS (user 'postgres', password 'password');
+  
+CREATE FOREIGN TABLE IF NOT EXISTS orders_boston PARTITION OF Orders
+    FOR VALUES IN ('boston')
+    SERVER boston_server OPTIONS (table_name 'orders');
+
+CREATE FOREIGN TABLE IF NOT EXISTS orders_denver PARTITION OF Orders
+    FOR VALUES IN ('denver')
+    SERVER denver_server OPTIONS (table_name 'orders');
+
+CREATE FOREIGN TABLE IF NOT EXISTS orders_seattle PARTITION OF Orders
+    FOR VALUES IN ('seattle')
+    SERVER seattle_server OPTIONS (table_name 'orders');    
+
+
+  -- ALTER TABLE map_product_component
+  --   ADD CONSTRAINT FK_Products_TO_map_product_component
+  --     FOREIGN KEY (product_id)
+  --     REFERENCES Products (product_id);
+
+  -- ALTER TABLE map_product_component
+  --   ADD CONSTRAINT FK_Components_TO_map_product_component
+  --     FOREIGN KEY (component_id)
+  --     REFERENCES Components (component_id);
 
 -- ALTER TABLE Orders
 --   ADD CONSTRAINT FK_Customer_TO_Orders
