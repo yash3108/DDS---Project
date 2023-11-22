@@ -36,6 +36,8 @@ def place_order(conn):
             rem_products[product_id] = products[product_id] - available_qty
         
     if not len(rem_products):
+        query = "INSERT INTO ORDERS (customer_id, order_date, status) VALUES ())"
+        
         print("Order Placed: All products available for immediate delivery")
         return
     

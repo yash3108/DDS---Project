@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS Customer
   customer_id SERIAL,
   name        TEXT    NOT NULL,
   country     TEXT    NOT NULL,
-  region_id   INTEGER
+  region_id   INTEGER,
   PRIMARY KEY (customer_id)
 );
 
@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS Orders
 (
   order_id    SERIAL,
   customer_id INTEGER  NOT NULL,
-  order_date  DATETIME,
+  order_date  DATE,
   status      TEXT    ,
-  region_id   INTEGER NOT NULL 
+  region_id   INTEGER NOT NULL,
   PRIMARY KEY (order_id)
 );
 
