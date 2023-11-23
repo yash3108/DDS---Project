@@ -5,7 +5,7 @@ def setup_db():
     for region in gv_regions:
         conn = get_database_connection(region)
         conn.autocommit = True
-        cursor = conn.cursor
+        cursor = conn.cursor()
         if region == "central":
             sql_script_path = 'create_script_central.sql'
         else:
