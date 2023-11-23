@@ -25,15 +25,8 @@ def get_product_components(product_collection, product_id):
     product = product_collection.find_one({"product_id": product_id})
     return product["components"]
 
-def insert_order():
-    order_collection = getCollection("The_Devils_Base", "order_collection")
-    def get_next_order_id():
-        max_order = order_collection.find_one(sort=[("order_id", pymongo.DESCENDING)])
-        if max_order:
-            return max_order["order_id"] + 1
-        else:
-            return 1
-        
+def insert_order_data():
+    
     products = []
     while True:
         product_id = input("Enter product ID (or type 'done' to finish): ")
@@ -41,14 +34,22 @@ def insert_order():
             break
         quantity = int(input("Enter quantity for given Product ID ({}): ".format(product_id)))
         products.append({"product_id": product_id, "quantity": quantity})
-    
+    return products
+
+def insert_order(products):
+    order_collection = getCollection("The_Devils_Base", "order_collection")
+    def get_next_order_id():
+        max_order = order_collection.find_one(sort=[("order_id", pymongo.DESCENDING)])
+        if max_order:
+            return max_order["order_id"] + 1
+        else:
+            return 1
     order_data = {
     "order_id": get_next_order_id(),
     "products": products,
     }
     # Insert data into the orders collection
     order_collection.insert_one(order_data)
-    return products
 
 def insert_product():
     product_collection = getCollection("The_Devils_Base", "product_collection")

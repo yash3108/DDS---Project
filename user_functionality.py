@@ -7,7 +7,7 @@ from network import *
 PRODUCTS = "Products"
 INVENTORY = "Inventory"
 
-def local_user_menu(lv_region_index,conn):
+def local_user_menu(lv_region_index):
     conn = get_database_connection(gv_regions[lv_region_index])
     print("\Select Options:")
     print("\n1. Add Product")
