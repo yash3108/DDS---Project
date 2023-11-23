@@ -1,13 +1,14 @@
 from network import *
 from user_functionality import *
+from init_app import *
 
-def admin_functionality():
+def admin_menu():
     option = int(input("Select Option : \n1. Access Central DB Fucntions\n2. Access Local DB Functions\n"))
     match option:
         case 1:
             central_db_functions()
         case 2:
-            region = int(input("Select Region: \n1. Boston\n2. Denver\n3. Seattle\n"))
+            region = region_menu()
             local_user_menu(region - 1)
         case _:
             print("Slect the appropriate option")

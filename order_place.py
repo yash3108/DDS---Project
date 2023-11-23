@@ -19,7 +19,7 @@ def display_products(conn):
         product_name, price = row
         print(f"Product N: {product_name}, Price: {price}")
 
-def place_order(region):
+def customer_menu(region):
     conn = get_database_connection(region)
     conn.autocommit = True
     customer_id = int(input("Enter Customer ID: "))
