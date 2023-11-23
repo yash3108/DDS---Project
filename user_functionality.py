@@ -3,13 +3,14 @@ import random as r
 import datetime as dt
 from NoSQL_data_handling import *
 from network import *
+import init_app
 
 PRODUCTS = "Products"
 INVENTORY = "Inventory"
 
 def local_user_menu(lv_region_index):
     conn = get_database_connection(gv_regions[lv_region_index])
-    print("\Select Options:")
+    print("\nSelect Options:")
     print("\n1. Add Product")
     print("\n2. Add Supplier")
     print("\n3. Add Components")
@@ -26,9 +27,9 @@ def local_user_menu(lv_region_index):
     elif local_user_input == 4:
         restock_inventory(conn)  
     else:
-        close_system() 
+        init_app.init_app()
 
-    local_user_menu(lv_region_index,conn)
+    local_user_menu(lv_region_index)
 
 def insert_products_inventory(conn,lv_region_index):
     '''

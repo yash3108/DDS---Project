@@ -214,3 +214,4 @@ def close_system():
         lv_container_name = region + "_container"
         stop_container(lv_container_name)
     print("\nSystem closed")
+    quit()
