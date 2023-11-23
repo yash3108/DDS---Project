@@ -99,6 +99,7 @@ def insert_supplier_components(region_db):
         
     components = []
     supplier_id = get_next_supplier_id()
+    supplier_name = input("Enter Suppliers name: ")
     while True:
         component_id = input("Enter component ID (or type 'done' to finish): ")
         if component_id.lower() == 'done':
@@ -106,4 +107,4 @@ def insert_supplier_components(region_db):
         name = input("Enter the name of component: ")
         components.append({"component_id": component_id, "name": name})
     
-    return supplier_id,components
+    return supplier_id,supplier_name,components
