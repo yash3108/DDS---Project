@@ -1,5 +1,7 @@
 from network import *
 from user_functionality import *
+from admin_handling import *
+from order_place import *
 
 # Function to initialize the app menu
 def init_menu():
@@ -28,12 +30,6 @@ def region_menu():
     u_input = int(input("\nEnter choice number: "))
     return (u_input - 1)
 
-def admin_menu():
-    pass
-
-def customer_menu(im_region_index):
-    pass
-
 # Funtion to navigate based on user input
 def navigate(im_u_input):
     """
@@ -48,7 +44,7 @@ def navigate(im_u_input):
             local_user_menu(lv_region_index)
         case 3:
             lv_region_index = region_menu()
-            customer_menu(lv_region_index)
+            customer_menu(gv_regions[lv_region_index])
         case 4:
             close_system()
 

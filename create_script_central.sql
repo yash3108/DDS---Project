@@ -1,6 +1,6 @@
 -- Global Tables
 
-CREATE TABLE IF NOT EXISTS Customer
+CREATE TABLE IF NOT EXISTS Customers
 (
   customer_id SERIAL,
   name        TEXT    NOT NULL,
