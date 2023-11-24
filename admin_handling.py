@@ -1,6 +1,6 @@
 from network import *
 from user_functionality import *
-from init_app import *
+import init_app
 
 def admin_menu():
     option = int(input("Select Option : \n1. Access Central DB Fucntions\n2. Access Local DB Functions\n"))
@@ -8,7 +8,7 @@ def admin_menu():
         case 1:
             central_db_functions()
         case 2:
-            region = region_menu()
+            region = init_app.region_menu()
             local_user_menu(region - 1)
         case _:
             print("Slect the appropriate option")
@@ -16,7 +16,7 @@ def admin_menu():
 def central_db_functions():
     conn = get_database_connection(gv_regions[3])
     conn.autocommit = True 
-    cursor = conn.cursor
+    cursor = conn.cursor()
     func = int(input("Select from below Functions\n1. Add New Customer\n2. Display Sales\n"))
     match func:
         case 1:
@@ -24,12 +24,14 @@ def central_db_functions():
             country = str(input("Enter your Country"))
             region =  int(input("Select closest Region: \n1. Boston\n2. Denver\n3. Seattle\n"))
             region = gv_regions[region - 1]
-            query = f"INSERT INTO Customers (name, country, region) VALUES ({name}, {country}, {region}));"
+            query = f"INSERT INTO Customers (name, country, region) VALUES {name,country,region};"
             cursor.execute(query)
         case 2:
-            year = int(input("Enter year to display Sales"))
-            query = f"SELECT * FROM Orders WHERE EXTRACT(YEAR FROM order_date) = {year};"
+            year = int(input("Enter year to display Sales: "))
+            query = f"SELECT * FROM Orders WHERE EXTRACT (YEAR FROM order_date) = {year};"
             cursor.execute(query)
+            result = cursor.fetchall()
+            print(result)
         case _:
             print("Select appropriate function")
         

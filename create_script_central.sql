@@ -25,15 +25,15 @@ CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 
 CREATE SERVER IF NOT EXISTS boston_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (dbname 'boston_db', host 'localhost');
 
-CREATE USER MAPPING IF NOT EXISTS FOR current_user SERVER boston_server OPTIONS (user 'postgres', password 'password');
+CREATE USER MAPPING IF NOT EXISTS FOR current_user SERVER boston_server OPTIONS (user 'postgres', password 'postgres');
 
 CREATE SERVER IF NOT EXISTS denver_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (dbname 'denver_db', host 'localhost');
 
-CREATE USER MAPPING IF NOT EXISTS FOR current_user SERVER denver_server OPTIONS (user 'postgres', password 'password');
+CREATE USER MAPPING IF NOT EXISTS FOR current_user SERVER denver_server OPTIONS (user 'postgres', password 'postgres');
 
 CREATE SERVER IF NOT EXISTS seattle_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (dbname 'seattle_db', host 'localhost');
 
-CREATE USER MAPPING  IF NOT EXISTS FOR current_user SERVER seattle_server OPTIONS (user 'postgres', password 'password');
+CREATE USER MAPPING  IF NOT EXISTS FOR current_user SERVER seattle_server OPTIONS (user 'postgres', password 'postgres');
   
 CREATE FOREIGN TABLE IF NOT EXISTS orders_boston PARTITION OF Orders
     FOR VALUES IN ('boston')

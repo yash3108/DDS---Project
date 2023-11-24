@@ -1,12 +1,13 @@
 import psycopg2
 from NoSQL_data_handling import *
 from network import *
+
 def display_products(conn): 
     # Create a cursor object to execute SQL queries
     cursor = conn.cursor()
 
     # Define the SQL query to select product name and price from the product table
-    query = "SELECT product_name, price FROM product"
+    query = "SELECT name, price FROM products;"
 
     # Execute the query
     cursor.execute(query)
@@ -20,34 +21,36 @@ def display_products(conn):
         print(f"Product N: {product_name}, Price: {price}")
 
 def customer_menu(region):
-    conn = get_database_connection(region)
+    conn = get_database_connection(gv_regions[3])
     conn.autocommit = True
     customer_id = int(input("Enter Customer ID: "))
-    query = f"SELECT COUNT(*) FROM your_customer_table WHERE customer_id = {customer_id};"
-    cursor = conn.cursor
-    row  = cursor.execute(query)
-    count = row.fetchall()
+    query = f"SELECT COUNT(*) FROM customers WHERE customer_id = {customer_id};"
+    cursor = conn.cursor()
+    cursor.execute(query)
+    count = cursor.fetchall()
     if count == 0:
         print("Customer ID does not exist")
         conn.close()
         return
     date = str(input("Enter date in YYYY-MM-DD format: "))
+    conn = get_database_connection(region)
     display_products(conn)
     products = insert_order_data()
     rem_products = {}
-    for product_id in products:
-        query = f"SELECT quantity from product where product_id = '{product_id}'",
+    for i in range(len(products)):
+        query = f"SELECT quantity from products where product_id = {products[i]['product_id']};"
         cursor = conn.cursor()
         cursor.execute(query)
-        available_qty = cursor.fetchall()
-        if products[product_id] <= available_qty:
+        available_qty = cursor.fetchall()[0]
+        print(available_qty)
+        if int(products[i]['product_id']) > int(available_qty[0]):
             continue
         else:
-            rem_products[product_id] = products[product_id] - available_qty
+            rem_products[product_id] = products[i]['product_id'] - available_qty
         
     if not len(rem_products):
-
-        query = f"INSERT INTO ORDERS (customer_id, order_date, status) VALUES ({customer_id}. {date}, 'Placed'));"
+        order_status = 'Placed'
+        query = f"INSERT INTO ORDERS (customer_id, order_date, status, region) VALUES {customer_id, date, order_status, region};"
         cursor.execute(query)
         print("Order Placed: All products available for immediate delivery")
         insert_order(products)
@@ -62,12 +65,13 @@ def customer_menu(region):
             query = f"SELECT quantity from inventory where component_id = '{component_id}'"
             cursor.execute(query)
             available_qty = cursor.fetchall()
-            if components[component_id] <= available_qty:
+            if components[component_id] > available_qty:
                 continue
             else:
                 rem_components[component_id] = components[component_id] - available_qty
         if not len(rem_components):
-            query = f"INSERT INTO ORDERS (customer_id, order_date, status) VALUES ({customer_id}. {date}, 'Components ordered'));"
+            order_status = 'Components ordered'
+            query = f"INSERT INTO ORDERS (customer_id, order_date, status, region) VALUES {customer_id, date, order_status, region};"
             print("Order Placed: All Products are not available manufacturing remaining products from components available in warehouse")
             insert_order(products)
             conn.close()
@@ -82,8 +86,6 @@ def customer_menu(region):
         result = collection.find({'components.component_id': component_id})
         for supplier in result:
             print(supplier)
-        query = f"INSERT INTO ORDERS (customer_id, order_date, status) VALUES ({customer_id}. {date}, 'Not Placed: Missing Components'));"
-        cursor.execute(query)
     conn.close()
         
 
