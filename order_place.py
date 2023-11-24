@@ -21,6 +21,7 @@ def display_products(conn):
         print(f"Product N: {product_name}, Price: {price}")
 
 def customer_menu(region):
+    region_db = region + "_db"
     conn = get_database_connection(gv_regions[3])
     conn.autocommit = True
     customer_id = int(input("Enter Customer ID: "))
@@ -28,6 +29,7 @@ def customer_menu(region):
     cursor = conn.cursor()
     cursor.execute(query)
     count = cursor.fetchall()
+    count = count[0][0]
     if count == 0:
         print("Customer ID does not exist")
         conn.close()
@@ -37,53 +39,76 @@ def customer_menu(region):
     display_products(conn)
     products = insert_order_data()
     rem_products = {}
+    available_products = []
     for i in range(len(products)):
+        print(products[i]['product_id'])
         query = f"SELECT quantity from products where product_id = {products[i]['product_id']};"
         cursor = conn.cursor()
         cursor.execute(query)
-        available_qty = cursor.fetchall()[0]
-        print(available_qty)
-        if int(products[i]['product_id']) > int(available_qty[0]):
+        available_qty = cursor.fetchall()
+        available_qty = available_qty[0][0]
+        available_products.append(available_qty)
+        if int(products[i]['quantity']) <= available_qty:
             continue
         else:
-            rem_products[product_id] = products[i]['product_id'] - available_qty
-        
+            rem_products[products[i]['product_id']] = products[i]['quantity'] - available_qty
     if not len(rem_products):
+        for i in range(len(products)):
+            updated_quantity = available_products[i] - products[i]['quantity']
+            query = f"UPDATE Products SET quantity = {updated_quantity} where product_id = {products[i]['product_id']}"
+            cursor.execute(query)
         order_status = 'Placed'
         query = f"INSERT INTO ORDERS (customer_id, order_date, status, region) VALUES {customer_id, date, order_status, region};"
         cursor.execute(query)
         print("Order Placed: All products available for immediate delivery")
-        insert_order(products)
+        insert_order(region_db, products)
         conn.close()
         return
     
+    available_components = []
     for product_id in rem_products:
-        rem_components = {}
-        client = getCollection(region, "product_collection")
-        components = get_product_components(client, product_id)
-        for component_id in components:
-            query = f"SELECT quantity from inventory where component_id = '{component_id}'"
+        rem_components = []
+        components = get_product_components(region_db, int(product_id))
+        
+        for component in components:
+            query = f"SELECT quantity from inventory where component_id = '{component['component_id']}'"
             cursor.execute(query)
             available_qty = cursor.fetchall()
-            if components[component_id] > available_qty:
+            available_qty = available_qty[0][0]
+            conn.autocommit = False
+            if component['quantity']*rem_products[product_id] <= available_qty:
+                updated_comp_quantity = available_qty - component['quantity']*rem_products[product_id]
+                query = f"UPDATE Inventory SET quantity = {updated_comp_quantity} where component_id = {int(component['component_id'])}"
+                cursor.execute(query)
                 continue
             else:
-                rem_components[component_id] = components[component_id] - available_qty
+                rem_components.append(int(component['component_id']))
+
         if not len(rem_components):
+            conn.commit()
+            conn.autocommit = True
+            for i in range(len(products)):
+                updated_quantity = available_products[i] - products[i]['quantity']
+                if updated_quantity < 0:
+                    updated_quantity = 0
+                query = f"UPDATE Products SET quantity = {updated_quantity} where product_id = {products[i]['product_id']}"
+                cursor.execute(query)
             order_status = 'Components ordered'
             query = f"INSERT INTO ORDERS (customer_id, order_date, status, region) VALUES {customer_id, date, order_status, region};"
+            cursor.execute(query)
             print("Order Placed: All Products are not available manufacturing remaining products from components available in warehouse")
-            insert_order(products)
+            insert_order(region_db, products)
             conn.close()
             return
-    collection = getCollection(region, "supplier_collection")
+    supplier_collection = getCollection(region_db, "supplier_collection")
     for component_id in rem_components:
-        query = f"SELECT component_name from Inventory where component_id = {component_id}"
+        query = f"SELECT name from Inventory where component_id = {component_id}"
         cursor.execute(query)
         component_name = cursor.fetchall()
-        print(f"Missing component: {component_name} Quantity: {rem_components[component_id]}" )
+        component_name = component_name[0][0]
+        print(f"Missing component: {component_name}" )
         print("Suppliers for the component")
-        result = collection.find({'components.component_id': component_id})
+        result = supplier_collection.find({'components.component_id': str(component_id)})
         for supplier in result:
             print(supplier)
     conn.close()

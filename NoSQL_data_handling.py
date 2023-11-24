@@ -21,7 +21,8 @@ def show_product_components(product_id):
     product = product_collection.find_one({"product_id": product_id})
     print(product)
 
-def get_product_components(product_collection, product_id):
+def get_product_components(region_db, product_id):
+    product_collection = getCollection(region_db, "product_collection")
     product = product_collection.find_one({"product_id": product_id})
     return product["components"]
 
@@ -36,8 +37,8 @@ def insert_order_data():
         products.append({"product_id": product_id, "quantity": quantity})
     return products
 
-def insert_order(products):
-    order_collection = getCollection("The_Devils_Base", "order_collection")
+def insert_order(region_db, products):
+    order_collection = getCollection(region_db, "order_collection")
     def get_next_order_id():
         max_order = order_collection.find_one(sort=[("order_id", pymongo.DESCENDING)])
         if max_order:
