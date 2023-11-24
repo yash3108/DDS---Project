@@ -54,5 +54,6 @@ def init_app():
     Input: NA
     Output: NA
     """
-    lv_u_input = init_menu()
-    navigate(lv_u_input)
+    while True:
+        lv_u_input = init_menu()
+        navigate(lv_u_input)

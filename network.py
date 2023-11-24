@@ -5,7 +5,7 @@ global gv_client, gv_network
 gv_client, gv_network = None, None
 gv_network_name = "dds_network"
 gv_postgres_user = 'postgres'
-gv_postgres_password = "password"
+gv_postgres_password = "postgres"
 gv_default_database_credentials = {"dbname": "postgres", 
                                    "user": "postgres", 
                                    "password": "postgres"}
@@ -13,6 +13,8 @@ gv_regions = ["boston",
               "denver", 
               "seattle", 
               "central"]
+
+gv_ip_address = []
 
 # Function to create docker client
 def create_client():
