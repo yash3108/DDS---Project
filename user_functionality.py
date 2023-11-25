@@ -40,21 +40,13 @@ def insert_products_inventory(conn,lv_region_index):
     date = str(dt.date.today())
     price = int(input("Enter Products Price:$ "))
     quantity_available = int(input("Enter Initial Quantity: "))
-    insert_query = f"Insert into {PRODUCTS} (name,description,date_created,price,quantity) values {name,description,date,price,quantity_available}"
+
+    content = []
+    content.append(name,description,date,price,quantity_available)
     cursor = conn.cursor()
-    cursor.execute(insert_query)
-    search_product_id = f"select product_id from {PRODUCTS} where name = '{name}'"
-    cursor.execute(search_product_id)
-    product_id = cursor.fetchone()
-    product_id = list(product_id)
     print("Inventory: \n")
     display_inventory(conn)
-    while True:
-           response = input("Do you want to Insert new Components? (Yes/No): ")
-           if response == "Yes":
-               add_component_inventory(conn)
-           else:
-               break
+    add_component_inventory(conn)
     component_list = []
     search_component_id = f"select component_id from {INVENTORY}"
     cursor.execute(search_component_id)
@@ -65,7 +57,7 @@ def insert_products_inventory(conn,lv_region_index):
     print("Inventory: ")
     display_inventory(conn)
     print("-------Product Component Mapping-------")
-    insert_product_components(lv_region_index,product_id[0],component_list)
+    insert_product_components(lv_region_index,conn,component_list,content)
     cursor.close()
 
 def output(input_list):
@@ -79,7 +71,14 @@ def display_inventory(conn):
     output(component_data)
     cursor.close()
     
-def insert_product_components(lv_region_index,product_id,component_list):
+def insert_product_components(lv_region_index,conn,component_list,content):
+    insert_query = f"Insert into {PRODUCTS} (name,description,date_created,price,quantity) values {content[0],content[1],content[2],content[3],content[4]}"
+    cursor = conn.cursor()
+    cursor.execute(insert_query)
+    search_product_id = f"select product_id from {PRODUCTS} where name = '{content[0]}'"
+    cursor.execute(search_product_id)
+    product_id = cursor.fetchone()
+    product_id = list(product_id)
     region_db = gv_regions[lv_region_index]
     region_db+="_db"
     product_collection = getCollection(region_db, "product_collection")     
@@ -112,17 +111,25 @@ def add_component_inventory(conn):
     '''
     This function adds new components into our Inventory
     '''
-    name = input("Enter name of new Component: ")
-    description = input("Enter description on new Component: ")
-    date = str(dt.date.today())
-    price = int(input("Enter thr price of new Component:$ "))
-    quantity_available = int(input("Enter the Initial Quantity: "))
-    insert_query_inventory = f"Insert into {INVENTORY} (name,description,date_created,price,quantity) values {name,description,date,price,quantity_available}"
-    cursor = conn.cursor()
-    cursor.execute(insert_query_inventory)
-
-    display_inventory(conn)
-    cursor.close()
+    components = []
+    while True:
+        response = input("Do you want to Insert new Components? (Yes/No): ")
+        if response == "Yes":
+            name = input("Enter name of new Component: ")
+            description = input("Enter description on new Component: ")
+            date = str(dt.date.today())
+            price = int(input("Enter thr price of new Component:$ "))
+            quantity_available = int(input("Enter the Initial Quantity: "))
+            components.append([name,description,date,price,quantity_available])
+        else:
+            break
+    if(len(components)>0):
+        cursor = conn.cursor()
+        for i in components:
+            insert_query_inventory = f"Insert into {INVENTORY} (name,description,date_created,price,quantity) values {i[0],i[1],i[2],i[3],i[4]}"
+            cursor.execute(insert_query_inventory)
+        cursor.close()
+        display_inventory(conn)
     
 def restock_inventory(conn):
     '''
