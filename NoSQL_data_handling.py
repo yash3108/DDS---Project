@@ -83,9 +83,10 @@ def insert_new_components(component_list):
         if component_id.lower() == 'done':
             break
         if int(component_id) not in component_list:
-            print("This Component doesn't exists in the Inventory: ")
-        quantity = int(input("Enter quantity for given Component ID ({}): ".format(component_id)))
-        components.append({"component_id": component_id, "quantity": quantity})
+            print("This Component doesn't exists in the Inventory")
+        else:
+            quantity = int(input("Enter quantity for given Component ID ({}): ".format(component_id)))
+            components.append({"component_id": component_id, "quantity": quantity})
 
     return components
 
