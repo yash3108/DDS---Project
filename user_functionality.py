@@ -42,7 +42,7 @@ def insert_products_inventory(conn,lv_region_index):
     quantity_available = int(input("Enter Initial Quantity: "))
 
     content = []
-    content.append(name,description,date,price,quantity_available)
+    content += [name,description,date,price,quantity_available]
     cursor = conn.cursor()
     print("Inventory: \n")
     display_inventory(conn)
@@ -72,6 +72,7 @@ def display_inventory(conn):
     cursor.close()
     
 def insert_product_components(lv_region_index,conn,component_list,content):
+    components = insert_new_components(component_list)
     insert_query = f"Insert into {PRODUCTS} (name,description,date_created,price,quantity) values {content[0],content[1],content[2],content[3],content[4]}"
     cursor = conn.cursor()
     cursor.execute(insert_query)
@@ -82,7 +83,6 @@ def insert_product_components(lv_region_index,conn,component_list,content):
     region_db = gv_regions[lv_region_index]
     region_db+="_db"
     product_collection = getCollection(region_db, "product_collection")     
-    components = insert_new_components(component_list)
     product_data = {
     "product_id": product_id,
     "components": components,
