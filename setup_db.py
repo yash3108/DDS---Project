@@ -1,5 +1,6 @@
 from init_app import *
 import json
+import time
 
 def initialize_data_nosql(region):
 
@@ -14,7 +15,6 @@ def initialize_data_nosql(region):
             print("Mapped Orders to products")
         except Exception as e:
             print(f"Error: {e}")
-        
     else:
         file = f'initialize_nosql_product_{region}.json'
         try:
@@ -23,7 +23,6 @@ def initialize_data_nosql(region):
             region_db = region+"_db"
             collection = getCollection(region_db, "product_collection")
             collection.insert_many(data)
-            
             print("Mapped Products to Components")
         except Exception as e:
             print(f"Error: {e}")
@@ -33,11 +32,59 @@ def initialize_data_nosql(region):
             with open(file, 'r') as file:
                 data = json.load(file)
             region_db = region+"_db"
-            collection = getCollection(region_db, "supplier_colection")
+            collection = getCollection(region_db, "supplier_collection")
             collection.insert_many(data)
             print("Added Suppliers for Components")
         except Exception as e:
             print(f"Error: {e}")
+
+def display_inserted_data():
+    for region in gv_regions:
+        conn = get_database_connection(region)
+        region_db = region+"_db"
+        cursor = conn.cursor()
+        if region == gv_regions[3]:
+            query = "Select * from Customers;"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            print("\nCustomers")
+            for row in rows:
+                print(row)
+            query = "Select * from Orders;"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            print("\nOrders")
+            for row in rows:
+                print(row)
+            collection = getCollection(region_db, "order_collection")
+            results = collection.find()
+            print("\nOrder Mapping")
+            for result in results:
+                print(result)
+        else:
+            print(f"\nProducts in {region}")
+            query = "Select * from Products;"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            for row in rows:
+                print(row)
+            print(f"\nInventory in {region}")
+            query = "Select * from Inventory;"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            for row in rows:
+                print(row) 
+            collection = getCollection(region_db, "product_collection")
+            results = collection.find()
+            print("\nProduct Mapping")
+            for result in results:
+                print(result) 
+            collection = getCollection(region_db, "supplier_collection") 
+            results = collection.find()
+            print("\nSupplier Mapping")
+            for result in results:
+                print(result) 
+
 
 def setup_db():
     # Setup local DBs
@@ -89,6 +136,7 @@ def setup_db():
         # Close the cursor and connection
         cursor.close()
         conn.close()
+    display_inserted_data()
 
 
 
