@@ -22,17 +22,17 @@ def display_products(conn):
 
 def customer_menu(region):
     region_db = region + "_db"
-    conn = get_database_connection(gv_regions[3])
-    conn.autocommit = True
+    conn_central = get_database_connection(gv_regions[3])
+    conn_central.autocommit = True
     customer_id = int(input("Enter Customer ID: "))
     query = f"SELECT COUNT(*) FROM customers WHERE customer_id = {customer_id};"
-    cursor = conn.cursor()
-    cursor.execute(query)
-    count = cursor.fetchall()
+    cursor_central = conn_central.cursor()
+    cursor_central.execute(query)
+    count = cursor_central.fetchall()
     count = count[0][0]
     if count == 0:
         print("Customer ID does not exist")
-        conn.close()
+        conn_central.close()
         return
     date = str(input("Enter date in YYYY-MM-DD format: "))
     conn = get_database_connection(region)
@@ -59,13 +59,13 @@ def customer_menu(region):
             cursor.execute(query)
         order_status = 'Placed'
         query = f"INSERT INTO ORDERS (customer_id, order_date, status, region) VALUES {customer_id, date, order_status, region};"
-        cursor.execute(query)
+        cursor_central.execute(query)
         print("Order Placed: All products available for immediate delivery")
-        insert_order(region_db, products)
+        insert_order("central_db", products)
         conn.close()
+        conn_central.close()
         return
     
-    available_components = []
     for product_id in rem_products:
         rem_components = []
         components = get_product_components(region_db, int(product_id))
@@ -95,10 +95,11 @@ def customer_menu(region):
                 cursor.execute(query)
             order_status = 'Components ordered'
             query = f"INSERT INTO ORDERS (customer_id, order_date, status, region) VALUES {customer_id, date, order_status, region};"
-            cursor.execute(query)
+            cursor_central.execute(query)
             print("Order Placed: All Products are not available manufacturing remaining products from components available in warehouse")
-            insert_order(region_db, products)
+            insert_order("central_db", products)
             conn.close()
+            conn_central.close()
             return
     supplier_collection = getCollection(region_db, "supplier_collection")
     for component_id in rem_components:

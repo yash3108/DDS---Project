@@ -1,0 +1,50 @@
+[
+    {
+        "supplier_id": 1,
+        "supplier_name": "Asup LLC",
+        "components":[
+            {
+                "component_id": "1",
+                "name": "CPU"
+            }
+        ]
+    },
+    {
+        "supplier_id": 2,
+        "supplier_name": "Bsup LLC",
+        "components":[
+            {
+                "component_id": "2",
+                "name": "Chipset"
+            }
+        ]
+    },
+    {
+        "supplier_id": 3,
+        "supplier_name": "Csup LLC",
+        "components":[
+            {
+                "component_id": "2",
+                "name": "Chipset"
+            },
+            {
+                "component_id": "3",
+                "name": "Ports"
+            }
+        ]
+    },
+    {
+        "supplier_id": 4,
+        "supplier_name": "Dsup LLC",
+        "components":[
+            {
+                "component_id": "4",
+                "name": "Connectors"
+            },
+            {
+                "component_id": "5",
+                "name": "Magnet"
+            }
+        ]
+    }
+]

@@ -1,0 +1,19 @@
+[
+    {
+        "product_id": 1,
+        "components": [
+            {
+                "component_id": "1",
+                "quantity": 2
+            },
+            {
+                "component_id": "2",
+                "quantity": 1
+            },
+            {
+                "component_id": "3",
+                "quantity": 1
+            }
+        ]
+    }
+]

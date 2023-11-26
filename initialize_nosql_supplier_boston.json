@@ -1,0 +1,36 @@
+[
+    {
+        "supplier_id": 1,
+        "supplier_name": "Asup LLC",
+        "components":[
+            {
+                "component_id": "1",
+                "name": "Sensors"
+            }
+        ]
+    },
+    {
+        "supplier_id": 1,
+        "supplier_name": "Bsup LLC",
+        "components":[
+            {
+                "component_id": "1",
+                "name": "Sensors"
+            }
+        ]
+    },
+    {
+        "supplier_id": 3,
+        "supplier_name": "Csup LLC",
+        "components":[
+            {
+                "component_id": "2",
+                "name": "Filler"
+            },
+            {
+                "component_id": "3",
+                "name": "Driver"
+            }
+        ]
+    }
+]

@@ -1,0 +1,46 @@
+[
+    {
+        "supplier_id": 1,
+        "supplier_name": "Asup LLC",
+        "components":[
+            {
+                "component_id": "1",
+                "name": "Transistors"
+            }
+        ]
+    },
+    {
+        "supplier_id": 2,
+        "supplier_name": "Bsup LLC",
+        "components":[
+            {
+                "component_id": "2",
+                "name": "Registers"
+            }
+        ]
+    },
+    {
+        "supplier_id": 3,
+        "supplier_name": "Csup LLC",
+        "components":[
+            {
+                "component_id": "1",
+                "name": "Transistors"
+            },
+            {
+                "component_id": "3",
+                "name": "Socket"
+            }
+        ]
+    },
+    {
+        "supplier_id": 4,
+        "supplier_name": "Dsup LLC",
+        "components":[
+            {
+                "component_id": "3",
+                "name": "Socket"
+            }
+        ]
+    }
+]
