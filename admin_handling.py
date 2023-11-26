@@ -30,8 +30,9 @@ def central_db_functions():
             year = int(input("Enter year to display Sales: "))
             query = f"SELECT * FROM Orders WHERE EXTRACT (YEAR FROM order_date) = {year};"
             cursor.execute(query)
-            result = cursor.fetchall()
-            print(result)
+            results = cursor.fetchall()
+            for result in results:
+                print(result)
         case _:
             print("Select appropriate function")
         

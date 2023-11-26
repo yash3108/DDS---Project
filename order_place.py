@@ -93,7 +93,7 @@ def customer_menu(region):
                     updated_quantity = 0
                 query = f"UPDATE Products SET quantity = {updated_quantity} where product_id = {products[i]['product_id']}"
                 cursor.execute(query)
-            order_status = 'Components ordered'
+            order_status = 'Manufacturing in process'
             query = f"INSERT INTO ORDERS (customer_id, order_date, status, region) VALUES {customer_id, date, order_status, region};"
             cursor.execute(query)
             print("Order Placed: All Products are not available manufacturing remaining products from components available in warehouse")
