@@ -6,20 +6,12 @@ def getCollection(db, collection):
     client = MongoClient("mongodb://localhost:27017")
     return client[db][collection]
 
-def show_order(order_id):
-    order_collection = getCollection("The_Devils_Base", "order_collection")
-    order = order_collection.find_one({"order_id": order_id})
-    print(order)
 
 def get_order(order_collection, order_id):
     # order_collection = getCollection("The_Devils_Base", "order_collection")
     order = order_collection.find_one({"order_id": order_id})
     return order
 
-def show_product_components(product_id):
-    product_collection = getCollection("The_Devils_Base", "product_collection")
-    product = product_collection.find_one({"product_id": product_id})
-    print(product)
 
 def get_product_components(region_db, product_id):
     product_collection = getCollection(region_db, "product_collection")
@@ -51,30 +43,6 @@ def insert_order(region_db, products):
     }
     # Insert data into the orders collection
     order_collection.insert_one(order_data)
-
-def insert_product():
-    product_collection = getCollection("The_Devils_Base", "product_collection")
-    def get_next_product_id():
-        max_order = product_collection.find_one(sort=[("product_id", pymongo.DESCENDING)])
-        if max_order:
-            return max_order["product_id"] + 1
-        else:
-            return 1
-        
-    components = []
-    while True:
-        component_id = input("Enter component ID (or type 'done' to finish): ")
-        if component_id.lower() == 'done':
-            break
-        quantity = int(input("Enter quantity for given Component ID ({}): ".format(component_id)))
-        components.append({"component_id": component_id, "quantity": quantity})
-    
-    product_data = {
-    "product_id": get_next_product_id(),
-    "components": components,
-    }
-    # Insert data into the products collection
-    product_collection.insert_one(product_data)
 
 def insert_new_components(component_list):
     components = []
