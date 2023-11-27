@@ -7,7 +7,7 @@ def display_products(conn):
     cursor = conn.cursor()
 
     # Define the SQL query to select product name and price from the product table
-    query = "SELECT name, price FROM products;"
+    query = "SELECT product_id, name, price FROM products;"
 
     # Execute the query
     cursor.execute(query)
@@ -17,8 +17,8 @@ def display_products(conn):
 
     # Display the product information
     for row in rows:
-        product_name, price = row
-        print(f"Product N: {product_name}, Price: {price}")
+        product_id, product_name, price = row
+        print(f"Product Id: {product_id}, Product N: {product_name}, Price: {price}")
 
 def customer_menu(region):
     region_db = region + "_db"

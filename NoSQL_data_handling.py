@@ -30,10 +30,10 @@ def insert_order_data():
     
     products = []
     while True:
-        product_id = input("Enter product ID (or type 'done' to finish): ")
+        product_id = input("Enter product ID to add in cart(or type 'done' to finish): ")
         if product_id.lower() == 'done':
             break
-        quantity = int(input("Enter quantity for given Product ID ({}): ".format(product_id)))
+        quantity = int(input("Enter quantity for the Product ID ({}): ".format(product_id)))
         products.append({"product_id": product_id, "quantity": quantity})
     return products
 
