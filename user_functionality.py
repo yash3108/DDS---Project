@@ -38,13 +38,13 @@ def insert_products_inventory(conn,lv_region_index):
     name = input("Enter Product name: ")
     description = input("Enter Product Description: ")
     date = str(dt.date.today())
-    price = int(input("Enter Products Price:$ "))
+    price = int(input("Enter Product's Price:$ "))
     quantity_available = int(input("Enter Initial Quantity: "))
 
     content = []
     content += [name,description,date,price,quantity_available]
     cursor = conn.cursor()
-    print("Inventory: \n")
+    print("----------Inventory-----------")
     display_inventory(conn)
     add_component_inventory(conn)
     component_list = []
@@ -54,7 +54,7 @@ def insert_products_inventory(conn,lv_region_index):
     for i in range(0,len(get_component_list)):
         component_list.append(list(get_component_list[i])[0])
         
-    print("Inventory: ")
+    print("----------Inventory-----------")
     display_inventory(conn)
     print("-------Product Component Mapping-------")
     insert_product_components(lv_region_index,conn,component_list,content)
@@ -94,6 +94,7 @@ def add_suppliers(conn,lv_region_index):
     '''
     This function adds a new supplier in our NO-SQL database
     '''
+    print("----------Inventory-----------")
     display_inventory(conn)
     region_db = gv_regions[lv_region_index]
     region_db+="_db"
@@ -113,7 +114,7 @@ def add_component_inventory(conn):
     '''
     components = []
     while True:
-        response = input("Do you want to Insert new Components? (Yes/No): ")
+        response = input("Do you want to Insert new Component? (Yes/No): ")
         if response == "Yes":
             name = input("Enter name of new Component: ")
             description = input("Enter description on new Component: ")
@@ -129,16 +130,18 @@ def add_component_inventory(conn):
             insert_query_inventory = f"Insert into {INVENTORY} (name,description,date_created,price,quantity) values {i[0],i[1],i[2],i[3],i[4]}"
             cursor.execute(insert_query_inventory)
         cursor.close()
+        print("----------Inventory-----------")
         display_inventory(conn)
     
 def restock_inventory(conn):
     '''
     This function restocks our Inventory 
     '''
+    print("----------Inventory-----------")
     display_inventory(conn)
     cursor = conn.cursor()
     while True:
-        component_id = input("Enter component ID (or type 'done' to finish): ")
+        component_id = input("Enter component ID to be restocked (or type 'done' to finish): ")
         if component_id.lower() == 'done':
             break
         search_query = f"SELECT quantity from {INVENTORY} where component_id = {component_id}"
@@ -152,5 +155,5 @@ def restock_inventory(conn):
         cursor.execute(update_query)
     
     cursor.close()
-    print("Inventory after Restocking: ")
+    print("-----Inventory after Restocking-----")
     display_inventory(conn)
